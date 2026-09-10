@@ -12,9 +12,6 @@ const ReviewOutputSchema = z.object({
 });
 
 const MergedOutputSchema = z.object({
-  ceoReview: z.string(),
-  analystReview: z.string(),
-  ctoReview: z.string(),
   mergedVerdict: z.string(),
 });
 
@@ -128,7 +125,12 @@ const ideaReviewBoardPipeline = new Pipeline({
         prompt: `CEO Review:\n${context.input.ceo.review}\n\nAnalyst Review:\n${context.input.analyst.review}\n\nCTO Review:\n${context.input.cto.review}`,
         outputSchema: MergedOutputSchema,
       });
-      return result.output;
+      return {
+        ceoReview: context.input.ceo.review,
+        analystReview: context.input.analyst.review,
+        ctoReview: context.input.cto.review,
+        mergedVerdict: result.output.mergedVerdict,
+      };
     },
   });
 
