@@ -1,6 +1,12 @@
 import { generateCompletion } from "@anvia/core";
 import { model } from "./model.js";
 import z from "zod";
+import { tavily } from "@tavily/core";
+import "dotenv/config";
+
+const tavilyClient = tavily({
+  apiKey: process.env.TAVI_API_KEY!,
+});
 
 const QueriesSchema = z.object({
   queries: z.array(z.string()),
@@ -25,4 +31,9 @@ export async function generateQueries(companyName: string) {
   });
 
   return result.output;
+}
+
+export async function searchWeb(query: string) {
+  const result = await tavilyClient.search(query);
+  return result.results;
 }
